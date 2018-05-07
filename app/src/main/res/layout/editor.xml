@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".EditorActivity">
+
+
+    <EditText
+        android:id="@+id/edit_name"
+        style="@style/EditorFieldStyle"
+        android:hint="@string/hintName"
+        android:inputType="textCapWords" />
+
+    <EditText
+        android:id="@+id/edit_price"
+        style="@style/EditorFieldStyle"
+        android:hint="@string/hintPrice"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/edit_quantity"
+        style="@style/EditorFieldStyle"
+        android:hint="@string/hintQuantity"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/edit_supplier_name"
+        style="@style/EditorFieldStyle"
+        android:hint="@string/hintSupplierName"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/edit_supplier_no"
+        style="@style/EditorFieldStyle"
+        android:hint="@string/hintSupplierNo"
+        android:inputType="number" />
+</LinearLayout>
