@@ -1,4 +1,5 @@
 package com.example.project.project8.data;
+
 import android.provider.BaseColumns;
 
 public class StoreContract {

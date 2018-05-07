@@ -17,6 +17,7 @@ import com.example.project.project8.data.StoreDBHelper;
 public class MainActivity extends AppCompatActivity {
     private StoreDBHelper mDbHelper;
     Cursor cursor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 StoreEntry.COLUMN_SUPPLIER_NUMBER};
 
         // Perform a query on the pets table
-         cursor = db.query(
+        cursor = db.query(
                 StoreEntry.TABLE_NAME,   // The table to query
                 projection,            // The columns to return
                 null,                  // The columns for the WHERE clause
@@ -68,15 +69,15 @@ public class MainActivity extends AppCompatActivity {
                 null);                   // The sort order
 
         TextView header = (TextView) findViewById(R.id.header);
-        TextView items=(TextView) findViewById(R.id.items);
+        TextView items = (TextView) findViewById(R.id.items);
         try {
             header.setText("The store table contains " + cursor.getCount() + " items.\n\n");
-            items.setText(StoreEntry._ID+" - "+
-                    StoreEntry.COLUMN_PRODUCT_NAME+" - "+
-                    StoreEntry.COLUMN_PRODUCT_PRICE+" - "+
-                    StoreEntry.COLUMN_PRODUCT_QUANTITY+" - "+
-                    StoreEntry.COLUMN_SUPPLIER_NAME+" - "+
-                    StoreEntry.COLUMN_SUPPLIER_NUMBER +"\n");
+            items.setText(StoreEntry._ID + " - " +
+                    StoreEntry.COLUMN_PRODUCT_NAME + " - " +
+                    StoreEntry.COLUMN_PRODUCT_PRICE + " - " +
+                    StoreEntry.COLUMN_PRODUCT_QUANTITY + " - " +
+                    StoreEntry.COLUMN_SUPPLIER_NAME + " - " +
+                    StoreEntry.COLUMN_SUPPLIER_NUMBER + "\n");
 
             // Figure out the index of each column
             int idColumnIndex = cursor.getColumnIndex(StoreEntry._ID);
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                         currentName + " - " +
                         currentPrice + " - " +
                         currentQuantity + " - " +
-                        currentSupplierName+" - "+
+                        currentSupplierName + " - " +
                         currentSupplierNo));
             }
         } finally {
@@ -109,9 +110,10 @@ public class MainActivity extends AppCompatActivity {
             cursor.close();
         }
     }
-    public void deleteAllData(){
+
+    public void deleteAllData() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        db.execSQL("DELETE FROM "+StoreEntry.TABLE_NAME+ ";" );
+        db.execSQL("DELETE FROM " + StoreEntry.TABLE_NAME + ";");
         cursor.close();
     }
 
@@ -122,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // User clicked on a menu option in the app bar overflow menu
