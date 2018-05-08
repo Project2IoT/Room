@@ -2,9 +2,11 @@ package com.example.project.project8;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -22,7 +24,14 @@ public class EditorActivity extends AppCompatActivity {
     private EditText mQuantityEditText;
     private EditText mSupplierNameEditText;
     private EditText mSupplierNoEditText;
-
+    String nameString;
+    String priceString;
+    String quantityString;
+    String supplierNameString = "Unknown";
+    String supplierNoString = "Unknown";
+    int price = 0;
+    int quantity = 0;
+    boolean nameEntered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +47,29 @@ public class EditorActivity extends AppCompatActivity {
     }
 
 
-    private void insertPet() {
+    private void insertItem() {
 
-        String nameString = mNameEditText.getText().toString().trim();
-        String priceString = mPriceEditText.getText().toString().trim();
-        String quantityString = mQuantityEditText.getText().toString().trim();
-        String supplierNameString = mSupplierNameEditText.getText().toString().trim();
-        String supplierNoString = mSupplierNoEditText.getText().toString().trim();
-
-        int price = Integer.parseInt(priceString);
-        int quantity = Integer.parseInt(quantityString);
-
+        nameString = mNameEditText.getText().toString().trim();
+        priceString = mPriceEditText.getText().toString().trim();
+        quantityString = mQuantityEditText.getText().toString().trim();
+        supplierNameString = mSupplierNameEditText.getText().toString().trim();
+        supplierNoString = mSupplierNoEditText.getText().toString().trim();
+        if (!TextUtils.isEmpty(priceString)) {
+            price = Integer.parseInt(priceString);
+        }
+        if (!TextUtils.isEmpty(quantityString)) {
+            quantity = Integer.parseInt(quantityString);
+        }
+        if (TextUtils.isEmpty(nameString)) {
+            mNameEditText.setHintTextColor(Color.RED);
+        }
+        if (TextUtils.isEmpty(priceString)) {
+            mPriceEditText.setHintTextColor(Color.RED);
+        }
+        if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString)) {
+            nameEntered = false;
+            return;
+        }
         // Create database helper
         StoreDBHelper mDbHelper = new StoreDBHelper(this);
 
@@ -70,19 +91,32 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    public boolean allFieldsEntered() {
+        if (nameEntered==false) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.editor_menu, menu);
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_save:
-                insertPet();
-                finish();
-                return true;
+            case R.id.action_save: {
+                if (allFieldsEntered()){
+                    insertItem();
+                    finish();
+                } else {
+                    Toast.makeText(this, "please fill in all field", Toast.LENGTH_SHORT).show();
+                }
+
+            }
             case action_delete:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
@@ -90,7 +124,7 @@ public class EditorActivity extends AppCompatActivity {
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
-        return super.
-                onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
+
 }
