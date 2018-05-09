@@ -55,6 +55,7 @@ public class EditorActivity extends AppCompatActivity {
         quantityString = mQuantityEditText.getText().toString().trim();
         supplierNameString = mSupplierNameEditText.getText().toString().trim();
         supplierNoString = mSupplierNoEditText.getText().toString().trim();
+
         if (!TextUtils.isEmpty(priceString)) {
             price = Integer.parseInt(priceString);
         }
@@ -67,13 +68,10 @@ public class EditorActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(priceString)) {
             mPriceEditText.setHintTextColor(Color.RED);
-        }
-        if (TextUtils.isEmpty(nameString)) {
-            nameEntered = false;
-
-        } else if (TextUtils.isEmpty(priceString)) {
             priceEntered = false;
         } else {
+            nameEntered=true;
+            priceEntered=true;
             // Create database helper
             StoreDBHelper mDbHelper = new StoreDBHelper(this);
 
@@ -97,9 +95,7 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     public boolean allFieldsEntered() {
-        if (!nameEntered) {
-            return false;
-        } else if (!priceEntered) {
+        if ((nameEntered == false) || (priceEntered == false)) {
             return false;
         } else
             return true;
@@ -121,8 +117,9 @@ public class EditorActivity extends AppCompatActivity {
                     finish();
                 } else {
                     Toast.makeText(this, "please fill in all field", Toast.LENGTH_SHORT).show();
-                    return true;
+
                 }
+                return true;
             }
             case action_delete:
                 NavUtils.navigateUpFromSameTask(this);
