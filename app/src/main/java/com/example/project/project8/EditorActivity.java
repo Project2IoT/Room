@@ -31,7 +31,8 @@ public class EditorActivity extends AppCompatActivity {
     String supplierNoString = "Unknown";
     int price = 0;
     int quantity = 0;
-    boolean nameEntered;
+    boolean nameEntered = true;
+    boolean priceEntered = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,40 +63,46 @@ public class EditorActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(nameString)) {
             mNameEditText.setHintTextColor(Color.RED);
+            nameEntered = false;
         }
         if (TextUtils.isEmpty(priceString)) {
             mPriceEditText.setHintTextColor(Color.RED);
         }
-        if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString)) {
+        if (TextUtils.isEmpty(nameString)) {
             nameEntered = false;
-            return;
-        }
-        // Create database helper
-        StoreDBHelper mDbHelper = new StoreDBHelper(this);
 
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(StoreEntry.COLUMN_PRODUCT_NAME, nameString);
-        values.put(StoreEntry.COLUMN_PRODUCT_PRICE, price);
-        values.put(StoreEntry.COLUMN_PRODUCT_QUANTITY, quantity);
-        values.put(StoreEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
-        values.put(StoreEntry.COLUMN_SUPPLIER_NUMBER, supplierNoString);
-
-        long newRowId = db.insert(StoreEntry.TABLE_NAME, null, values);
-
-        if (newRowId == -1) {
-            Toast.makeText(this, "Error with saving item details", Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(priceString)) {
+            priceEntered = false;
         } else {
-            Toast.makeText(this, "item saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+            // Create database helper
+            StoreDBHelper mDbHelper = new StoreDBHelper(this);
+
+            SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(StoreEntry.COLUMN_PRODUCT_NAME, nameString);
+            values.put(StoreEntry.COLUMN_PRODUCT_PRICE, price);
+            values.put(StoreEntry.COLUMN_PRODUCT_QUANTITY, quantity);
+            values.put(StoreEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
+            values.put(StoreEntry.COLUMN_SUPPLIER_NUMBER, supplierNoString);
+
+            long newRowId = db.insert(StoreEntry.TABLE_NAME, null, values);
+
+            if (newRowId == -1) {
+                Toast.makeText(this, "Error with saving item details", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "item saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     public boolean allFieldsEntered() {
-        if (nameEntered==false) {
+        if (!nameEntered) {
             return false;
-        }
-        return true;
+        } else if (!priceEntered) {
+            return false;
+        } else
+            return true;
     }
 
     @Override
@@ -109,13 +116,13 @@ public class EditorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save: {
-                if (allFieldsEntered()){
-                    insertItem();
+                insertItem();
+                if (allFieldsEntered()) {
                     finish();
                 } else {
                     Toast.makeText(this, "please fill in all field", Toast.LENGTH_SHORT).show();
+                    return true;
                 }
-
             }
             case action_delete:
                 NavUtils.navigateUpFromSameTask(this);
