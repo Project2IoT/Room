@@ -1,22 +1,30 @@
 package com.example.project.project8;
 
+import android.app.LoaderManager;
+import android.content.ContentUris;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
+import com.example.project.project8.data.StoreAdapter;
 import com.example.project.project8.data.StoreContract.StoreEntry;
 import com.example.project.project8.data.StoreDBHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private StoreDBHelper mDbHelper;
     Cursor cursor;
+    private static final int LOADER = 1;
+    StoreAdapter storeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +42,28 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        ListView listView = (ListView) findViewById(R.id.list);
+
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        View emptyView = findViewById(R.id.empty_view);
+        listView.setEmptyView(emptyView);
+
+
+        storeAdapter = new StoreAdapter(this, null);
+        listView.setAdapter(storeAdapter);
+
         mDbHelper = new StoreDBHelper(this);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                // Create new intent to go to {@link EditorActivity}
+                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                Uri currentitemUri = ContentUris.withAppendedId(StoreEntry.CONTENT_URI, id);
+                intent.setData(currentitemUri);
+                startActivity(intent);
+            }
+        });
+        getLoaderManager().initLoader(LOADER, null, this);
     }
 
     @Override
@@ -43,102 +72,59 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void refresh() {
+        getLoaderManager().restartLoader(LOADER, null, this);
 
-    private void displayDatabaseInfo() {
-        // Create and/or open a database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
-        // Define a projection that specifies which columns from the database
-        // you will actually use after this query.
-        String[] projection = {
-                StoreEntry._ID,
-                StoreEntry.COLUMN_PRODUCT_NAME,
-                StoreEntry.COLUMN_PRODUCT_PRICE,
-                StoreEntry.COLUMN_PRODUCT_QUANTITY,
-                StoreEntry.COLUMN_SUPPLIER_NAME,
-                StoreEntry.COLUMN_SUPPLIER_NUMBER};
-
-        // Perform a query on the pets table
-        cursor = db.query(
-                StoreEntry.TABLE_NAME,   // The table to query
-                projection,            // The columns to return
-                null,                  // The columns for the WHERE clause
-                null,                  // The values for the WHERE clause
-                null,                  // Don't group the rows
-                null,                  // Don't filter by row groups
-                null);                   // The sort order
-
-        TextView header = (TextView) findViewById(R.id.header);
-        TextView items = (TextView) findViewById(R.id.items);
-        try {
-            header.setText("The store table contains " + cursor.getCount() + " items.\n\n");
-            items.setText(StoreEntry._ID + " - " +
-                    StoreEntry.COLUMN_PRODUCT_NAME + " - " +
-                    StoreEntry.COLUMN_PRODUCT_PRICE + " - " +
-                    StoreEntry.COLUMN_PRODUCT_QUANTITY + " - " +
-                    StoreEntry.COLUMN_SUPPLIER_NAME + " - " +
-                    StoreEntry.COLUMN_SUPPLIER_NUMBER + "\n");
-
-            // Figure out the index of each column
-            int idColumnIndex = cursor.getColumnIndex(StoreEntry._ID);
-            int nameColumnIndex = cursor.getColumnIndex(StoreEntry.COLUMN_PRODUCT_NAME);
-            int priceColumnIndex = cursor.getColumnIndex(StoreEntry.COLUMN_PRODUCT_PRICE);
-            int quantityColumnIndex = cursor.getColumnIndex(StoreEntry.COLUMN_PRODUCT_QUANTITY);
-            int supplierNameColumnIndex = cursor.getColumnIndex(StoreEntry.COLUMN_SUPPLIER_NAME);
-            int supplierNoColumnIndex = cursor.getColumnIndex(StoreEntry.COLUMN_SUPPLIER_NUMBER);
-            // Iterate through all the returned rows in the cursor
-            while (cursor.moveToNext()) {
-                // Use that index to extract the String or Int value of the word
-                // at the current row the cursor is on.
-                int currentID = cursor.getInt(idColumnIndex);
-                String currentName = cursor.getString(nameColumnIndex);
-                int currentPrice = cursor.getInt(priceColumnIndex);
-                int currentQuantity = cursor.getInt(quantityColumnIndex);
-                String currentSupplierName = cursor.getString(supplierNameColumnIndex);
-                String currentSupplierNo = cursor.getString(supplierNoColumnIndex);
-                // Display the values from each column of the current row in the cursor in the TextView
-                items.append(("\n" + currentID + " - " +
-                        currentName + " - " +
-                        currentPrice + " - " +
-                        currentQuantity + " - " +
-                        currentSupplierName + " - " +
-                        currentSupplierNo));
-            }
-        } finally {
-            // Always close the cursor when you're done reading from it. This releases all its
-            // resources and makes it invalid.
-            cursor.close();
-        }
     }
 
     public void deleteAllData() {
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        db.execSQL("DELETE FROM " + StoreEntry.TABLE_NAME + ";");
-        cursor.close();
+        int rowsDeleted = getContentResolver().delete(StoreEntry.CONTENT_URI, null, null);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu options from the res/menu/menu_catalog.xml file.
-        // This adds menu items to the app bar.
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
-            // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_show_data:
-                displayDatabaseInfo();
+                refresh();
                 return true;
-            // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
                 deleteAllData();
-                displayDatabaseInfo();
+                refresh();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {
+                StoreEntry._ID,
+                StoreEntry.COLUMN_PRODUCT_NAME,
+                StoreEntry.COLUMN_PRODUCT_PRICE,
+                StoreEntry.COLUMN_PRODUCT_QUANTITY,
+        StoreEntry.COLUMN_SUPPLIER_NUMBER};
+
+        return new CursorLoader(this,   // Parent activity context
+                StoreEntry.CONTENT_URI,   // Provider content URI to query
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);                  // Default sort order
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        storeAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        storeAdapter.swapCursor(null);
     }
 }

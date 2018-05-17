@@ -6,4 +6,17 @@
     <string name="hintSupplierName">Supplier Name</string>
     <string name="hintSupplierNo">Supplier Number</string>
     <string name="instructions">Click on the button below to add a new book details, click on the options above to either show all data or delet all data!</string>
+    <string name="empty_view_title_text">Your book shelf is empty... </string>
+    <string name="empty_view_subtitle_text">Get started by adding a book </string>
+    <string name="edit">edit the item</string>
+    <string name="add"> add an item</string>
+    <string name="failed">There was an error! </string>
+    <string name="successful">Done!</string>
+    <string name="confirmDelete">Are you sure you want to delete the item?</string>
+    <string name="delete">Yes, delete!</string>
+    <string name="cancel">No, don\'t!</string>
+    <string name="refresh">Refresh</string>
+    <string name="deleteAll">Delete All Items</string>
+    <string name="invalid">Quantity cannot be less than zero    </string>
+    <string name="contact">Contact Supplier</string>
 </resources>

@@ -9,17 +9,8 @@ import com.example.project.project8.data.StoreContract.StoreEntry;
 public class StoreDBHelper extends SQLiteOpenHelper {
 
     public static final String LOG_TAG = StoreDBHelper.class.getSimpleName();
-
-    /**
-     * Name of the database file
-     */
     private static final String DATABASE_NAME = "store.db";
-
-    /**
-     * Database version. If you change the database schema, you must increment the database version.
-     */
     private static final int DATABASE_VERSION = 1;
-
     public StoreDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
