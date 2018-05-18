@@ -107,8 +107,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 StoreEntry._ID,
                 StoreEntry.COLUMN_PRODUCT_NAME,
                 StoreEntry.COLUMN_PRODUCT_PRICE,
-                StoreEntry.COLUMN_PRODUCT_QUANTITY,
-        StoreEntry.COLUMN_SUPPLIER_NUMBER};
+                StoreEntry.COLUMN_PRODUCT_QUANTITY};
 
         return new CursorLoader(this,   // Parent activity context
                 StoreEntry.CONTENT_URI,   // Provider content URI to query

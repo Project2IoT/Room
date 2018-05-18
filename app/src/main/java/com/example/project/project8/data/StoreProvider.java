@@ -148,12 +148,14 @@ public class StoreProvider extends ContentProvider {
             case ITEM_ID:
                 selection = StoreContract.StoreEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return database.delete(StoreContract.StoreEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted= database.delete(StoreContract.StoreEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
         if (rowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
+
         }
         return rowsDeleted;
     }

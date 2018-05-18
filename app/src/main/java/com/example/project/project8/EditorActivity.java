@@ -30,7 +30,11 @@ import com.example.project.project8.data.StoreDBHelper;
 import static com.example.project.project8.R.id.action_delete;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+    int updatedQuantity;
 
+    Button addOne;
+    Button deleteOne;
+    Button contact;
     private static final int LOADER = 0;
     private Uri mCurrentItemUri;
     private EditText mNameEditText;
@@ -38,18 +42,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mQuantityEditText;
     private EditText mSupplierNameEditText;
     private EditText mSupplierNoEditText;
-    private Button contact;
     String nameString;
     String priceString;
     String quantityString;
     String supplierNameString = "Unknown";
     String supplierNoString = "Unknown";
-    int price = 0;
-    int quantity = 0;
+    int price;
+    int quantity ;
     boolean nameEntered = true;
     boolean priceEntered = true;
     private boolean mItemHasChanged = false;
-    private Button sale;
+
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -64,13 +67,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         setContentView(R.layout.editor);
         Intent intent = getIntent();
         mCurrentItemUri = intent.getData();
-
-
+        //editTexts
         mNameEditText = (EditText) findViewById(R.id.edit_name);
         mPriceEditText = (EditText) findViewById(R.id.edit_price);
         mQuantityEditText = (EditText) findViewById(R.id.edit_quantity);
         mSupplierNameEditText = (EditText) findViewById(R.id.edit_supplier_name);
         mSupplierNoEditText = (EditText) findViewById(R.id.edit_supplier_no);
+        //Buttons
+        addOne = (Button) findViewById(R.id.addOne);
+        deleteOne = (Button) findViewById(R.id.deleteOne);
+        contact = (Button) findViewById(R.id.contact);
+        //activity titles
         if (mCurrentItemUri == null) {
             setTitle(getString(R.string.add));
             invalidateOptionsMenu();
@@ -85,61 +92,102 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierNameEditText.setOnTouchListener(mTouchListener);
         mSupplierNoEditText.setOnTouchListener(mTouchListener);
 
+        addOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quantityString = mQuantityEditText.getText().toString().trim();
+                if (!TextUtils.isEmpty(quantityString)) {
+                    quantity = Integer.parseInt(quantityString);
+                    quantity += 1;
+                } else {
+                    Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                }
+                mQuantityEditText.setText(Integer.toString(quantity));
+
+            }
+        });
+        deleteOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quantityString = mQuantityEditText.getText().toString().trim();
+                if (!TextUtils.isEmpty(quantityString)) {
+                    quantity = Integer.parseInt(quantityString);
+                    if(quantity>0)
+                    quantity -= 1;
+                } else {
+                    Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                }
+                mQuantityEditText.setText(Integer.toString(quantity));
+
+            }
+        });
+        contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                supplierNoString = mSupplierNoEditText.getText().toString().trim();
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + supplierNoString));
+                startActivity(intent);}
+        });
     }
 
     private void insertItem() {
-
         nameString = mNameEditText.getText().toString().trim();
         priceString = mPriceEditText.getText().toString().trim();
         quantityString = mQuantityEditText.getText().toString().trim();
         supplierNameString = mSupplierNameEditText.getText().toString().trim();
         supplierNoString = mSupplierNoEditText.getText().toString().trim();
-        if (mCurrentItemUri == null &&
-                TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(supplierNameString)
-                && TextUtils.isEmpty(supplierNoString)) {
+        if (
+                TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString)
+                        && TextUtils.isEmpty(quantityString)
+                        && TextUtils.isEmpty(supplierNameString)
+                        && TextUtils.isEmpty(supplierNoString)) {
+            Toast.makeText(this, "please fill in the fields", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!TextUtils.isEmpty(priceString)) {
             price = Integer.parseInt(priceString);
         }
         if (!TextUtils.isEmpty(quantityString)) {
-            quantity = Integer.parseInt(quantityString);
+            updatedQuantity = Integer.parseInt(quantityString);
         }
         if (TextUtils.isEmpty(nameString)) {
             mNameEditText.setHintTextColor(Color.RED);
             nameEntered = false;
+            Toast.makeText(this, "please fill in the name ", Toast.LENGTH_SHORT).show();
         }
-        if (TextUtils.isEmpty(priceString)) {
+       else  if (TextUtils.isEmpty(priceString)) {
             mPriceEditText.setHintTextColor(Color.RED);
             priceEntered = false;
+            Toast.makeText(this, "please fill in the price ", Toast.LENGTH_SHORT).show();
         } else {
             nameEntered = true;
             priceEntered = true;
-        }
-        // Create database helper
-        StoreDBHelper mDbHelper = new StoreDBHelper(this);
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(StoreEntry.COLUMN_PRODUCT_NAME, nameString);
-        values.put(StoreEntry.COLUMN_PRODUCT_PRICE, price);
-        values.put(StoreEntry.COLUMN_PRODUCT_QUANTITY, quantity);
-        values.put(StoreEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
-        values.put(StoreEntry.COLUMN_SUPPLIER_NUMBER, supplierNoString);
+            // Create database helper
+            StoreDBHelper mDbHelper = new StoreDBHelper(this);
+            SQLiteDatabase db = mDbHelper.getWritableDatabase();
+           ContentValues values = new ContentValues();
+            values.put(StoreEntry.COLUMN_PRODUCT_NAME, nameString);
+            values.put(StoreEntry.COLUMN_PRODUCT_PRICE, price);
+            values.put(StoreEntry.COLUMN_PRODUCT_QUANTITY, updatedQuantity);
+            values.put(StoreEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
+            values.put(StoreEntry.COLUMN_SUPPLIER_NUMBER, supplierNoString);
 
-        if (mCurrentItemUri == null) {
-            Uri newUri = getContentResolver().insert(StoreEntry.CONTENT_URI, values);
-            if (newUri == null) {
-                Toast.makeText(this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+            if (mCurrentItemUri == null) {
+                Uri newUri = getContentResolver().insert(StoreEntry.CONTENT_URI, values);
+                if (newUri == null) {
+                    Toast.makeText(this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, getString(R.string.successful), Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(this, getString(R.string.successful), Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
-            if (rowsAffected == 0) {
-                Toast.makeText(this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, getString(R.string.successful), Toast.LENGTH_SHORT).show();
+                int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
+                if (rowsAffected == 0) {
+                    Toast.makeText(this, getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, getString(R.string.successful), Toast.LENGTH_SHORT).show();
+                }
+
             }
         }
     }
@@ -189,7 +237,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     private void deleteItem() {
         if (mCurrentItemUri != null) {
@@ -242,7 +289,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 null);
     }
 
-
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor == null || cursor.getCount() < 1) {
@@ -276,5 +322,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText.setText("");
         mSupplierNameEditText.setText("");
         mSupplierNoEditText.setText("");
+    }
+
+    public void addOne() {
+
     }
 }

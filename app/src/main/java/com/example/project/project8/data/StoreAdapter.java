@@ -1,21 +1,14 @@
 package com.example.project.project8.data;
 
-import android.Manifest;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.project.project8.R;
 
@@ -41,26 +34,22 @@ public class StoreAdapter extends CursorAdapter {
         final TextView quantityTextView = (TextView) view.findViewById(R.id.book_quantity);
         TextView priceTextView = (TextView) view.findViewById(R.id.book_price);
 
-        Button addOne = (Button) view.findViewById(R.id.addOne);
-        Button deleteOne = (Button) view.findViewById(R.id.deleteOne);
-        Button contact = (Button) view.findViewById(R.id.contact);
+
 
         int nameColumnIndex = cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_NAME);
         int priceColumnIndex = cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_PRICE);
         final int quantityColumnIndex = cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_QUANTITY);
-        final int supplierNumberIndex = cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_SUPPLIER_NUMBER);
 
         String productName = cursor.getString(nameColumnIndex);
         String productPrice = cursor.getString(priceColumnIndex);
         final String productQuantity = cursor.getString(quantityColumnIndex);
-        final String supplierNumber = cursor.getString(supplierNumberIndex);
         quantity = cursor.getInt(quantityColumnIndex);
 
 
         String id = cursor.getString(cursor.getColumnIndex(StoreContract.StoreEntry._ID));
         final Uri mCurrentItemUri = ContentUris.withAppendedId(StoreContract.StoreEntry.CONTENT_URI,
                 Long.parseLong(id));
-        addOne.setOnClickListener(new View.OnClickListener() {
+        /*addOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -99,7 +88,7 @@ public class StoreAdapter extends CursorAdapter {
             }
 
         });
-
+*/
 
         nameTextView.setText(productName);
         priceTextView.setText(productPrice);

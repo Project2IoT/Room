@@ -2,7 +2,7 @@
     <string name="app_name">project8</string>
     <string name="hintName">Book Name *</string>
     <string name="hintPrice">Book Price *</string>
-    <string name="hintQuantity">Book Quantity *</string>
+    <string name="hintQuantity">Book Quantity </string>
     <string name="hintSupplierName">Supplier Name</string>
     <string name="hintSupplierNo">Supplier Number</string>
     <string name="instructions">Click on the button below to add a new book details, click on the options above to either show all data or delet all data!</string>

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
     package="com.example.project.project8">
+
     <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
     <application
 
@@ -13,14 +14,13 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<activity
+        <activity
             android:name=".EditorActivity"
-            android:theme="@style/EditorTheme"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/EditorTheme">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -31,6 +31,6 @@
             android:authorities="com.example.project.project8"
             android:exported="false" />
 
-       </application>
+    </application>
 
 </manifest>
