@@ -48,7 +48,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     String supplierNameString = "Unknown";
     String supplierNoString = "Unknown";
     int price;
-    int quantity ;
+    int quantity;
     boolean nameEntered = true;
     boolean priceEntered = true;
     private boolean mItemHasChanged = false;
@@ -112,8 +112,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 quantityString = mQuantityEditText.getText().toString().trim();
                 if (!TextUtils.isEmpty(quantityString)) {
                     quantity = Integer.parseInt(quantityString);
-                    if(quantity>0)
-                    quantity -= 1;
+                    if (quantity > 0)
+                        quantity -= 1;
                 } else {
                     Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
                 }
@@ -127,7 +127,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 supplierNoString = mSupplierNoEditText.getText().toString().trim();
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + supplierNoString));
-                startActivity(intent);}
+                startActivity(intent);
+            }
         });
     }
 
@@ -155,8 +156,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mNameEditText.setHintTextColor(Color.RED);
             nameEntered = false;
             Toast.makeText(this, "please fill in the name ", Toast.LENGTH_SHORT).show();
-        }
-       else  if (TextUtils.isEmpty(priceString)) {
+        } else if (TextUtils.isEmpty(priceString)) {
             mPriceEditText.setHintTextColor(Color.RED);
             priceEntered = false;
             Toast.makeText(this, "please fill in the price ", Toast.LENGTH_SHORT).show();
@@ -166,7 +166,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Create database helper
             StoreDBHelper mDbHelper = new StoreDBHelper(this);
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
-           ContentValues values = new ContentValues();
+            ContentValues values = new ContentValues();
             values.put(StoreEntry.COLUMN_PRODUCT_NAME, nameString);
             values.put(StoreEntry.COLUMN_PRODUCT_PRICE, price);
             values.put(StoreEntry.COLUMN_PRODUCT_QUANTITY, updatedQuantity);
