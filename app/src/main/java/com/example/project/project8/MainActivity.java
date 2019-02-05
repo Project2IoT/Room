@@ -16,15 +16,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.project.project8.data.StoreAdapter;
-import com.example.project.project8.data.StoreContract.StoreEntry;
-import com.example.project.project8.data.StoreDBHelper;
+import com.example.project.project8.data.RoomDBHelper;
+import com.example.project.project8.data.RoomAdapter;
+import com.example.project.project8.data.RoomContract.RoomEntry;
+import com.example.project.project8.data.RoomDBHelper;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-    private StoreDBHelper mDbHelper;
+    private RoomDBHelper mDbHelper;
     Cursor cursor;
     private static final int LOADER = 1;
-    StoreAdapter storeAdapter;
+    RoomAdapter storeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +50,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         listView.setEmptyView(emptyView);
 
 
-        storeAdapter = new StoreAdapter(this, null);
+        storeAdapter = new RoomAdapter(this, null);
         listView.setAdapter(storeAdapter);
 
-        mDbHelper = new StoreDBHelper(this);
+        mDbHelper = new RoomDBHelper(this);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 // Create new intent to go to {@link EditorActivity}
                 Intent intent = new Intent(MainActivity.this, EditorActivity.class);
-                Uri currentitemUri = ContentUris.withAppendedId(StoreEntry.CONTENT_URI, id);
+                Uri currentitemUri = ContentUris.withAppendedId(RoomEntry.CONTENT_URI, id);
                 intent.setData(currentitemUri);
                 startActivity(intent);
             }
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void deleteAllData() {
-        int rowsDeleted = getContentResolver().delete(StoreEntry.CONTENT_URI, null, null);
+        int rowsDeleted = getContentResolver().delete(RoomEntry.CONTENT_URI, null, null);
     }
 
     @Override
@@ -104,13 +105,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
-                StoreEntry._ID,
-                StoreEntry.COLUMN_PRODUCT_NAME,
-                StoreEntry.COLUMN_PRODUCT_PRICE,
-                StoreEntry.COLUMN_PRODUCT_QUANTITY};
+                RoomEntry._ID,
+                RoomEntry.COLUMN_ROOM_NAME,
+                RoomEntry.COLUMN_ARDUINO_NAME};
 
         return new CursorLoader(this,   // Parent activity context
-                StoreEntry.CONTENT_URI,   // Provider content URI to query
+                RoomEntry.CONTENT_URI,   // Provider content URI to query
                 projection,             // Columns to include in the resulting Cursor
                 null,                   // No selection clause
                 null,                   // No selection arguments

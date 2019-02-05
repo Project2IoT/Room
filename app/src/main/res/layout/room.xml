@@ -17,40 +17,30 @@
         android:layout_marginBottom="16dp">
 
         <TextView
-            android:id="@+id/book_name"
+            android:id="@+id/room_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="book name"
+            tools:text="room name"
             android:textSize="24sp"/>
 
-        <TextView
-            android:id="@+id/book_quantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="book quantity"
-            android:textSize="20sp"/>
+
 
     </LinearLayout>
-
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <TextView
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:id="@+id/book_price"
+        android:layout_width="wrap_content"
+        android:id="@+id/arduino_name"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        tools:text="book price"
+        tools:text="arduino"
         android:gravity="right"
         android:layout_marginTop="16dp"
                 />
-    <TextView
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        tools:text="$"
-        android:text="$"
-        android:layout_marginTop="16dp"
-        />
+</LinearLayout>
+
 </LinearLayout>
 
 </LinearLayout>

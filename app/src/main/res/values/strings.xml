@@ -1,22 +1,22 @@
 <resources>
-    <string name="app_name">project8</string>
-    <string name="hintName">Book Name *</string>
-    <string name="hintPrice">Book Price *</string>
-    <string name="hintQuantity">Book Quantity </string>
-    <string name="hintSupplierName">Supplier Name</string>
-    <string name="hintSupplierNo">Supplier Number</string>
-    <string name="instructions">Click on the button below to add a new book details, click on the options above to either show all data or delet all data!</string>
-    <string name="empty_view_title_text">Your book shelf is empty... </string>
-    <string name="empty_view_subtitle_text">Get started by adding a book </string>
+    <string name="app_name">Rooms</string>
+    <string name="hintName">Enter your Room\'s Name*</string>
+    <string name="hintPrice"></string>
+    <string name="hintQuantity">.</string>
+    <string name="hintSupplierName">.</string>
+    <string name="hintSupplierNo">.</string>
+    <string name="instructions">.</string>
+    <string name="empty_view_title_text">You did not add rooms yet! </string>
+    <string name="empty_view_subtitle_text">Your Rooms </string>
     <string name="edit">edit the item</string>
-    <string name="add"> add an item</string>
+    <string name="add"> add room</string>
     <string name="failed">There was an error! </string>
     <string name="successful">Done!</string>
-    <string name="confirmDelete">Are you sure you want to delete the item?</string>
+    <string name="confirmDelete">Are you sure you want to delete this room?</string>
     <string name="delete">Yes, delete!</string>
     <string name="cancel">No, don\'t!</string>
     <string name="refresh">Refresh</string>
-    <string name="deleteAll">Delete All Items</string>
-    <string name="invalid">Quantity cannot be less than zero    </string>
-    <string name="contact">Contact Supplier</string>
+    <string name="deleteAll">Delete All Rooms</string>
+    <string name="invalid">.</string>
+    <string name="contact">.</string>
 </resources>

@@ -9,22 +9,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
-public class StoreProvider extends ContentProvider {
+public class RoomProvider extends ContentProvider {
 
-    public static final String LOG_TAG = StoreProvider.class.getSimpleName();
-    private StoreDBHelper dbHelper;
+    public static final String LOG_TAG = RoomProvider.class.getSimpleName();
+    private RoomDBHelper dbHelper;
     private static final int STORE = 100;
     private static final int ITEM_ID = 101;
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        sUriMatcher.addURI(StoreContract.CONTENT_AUTHORITY, StoreContract.PATH_STORE, STORE);
-        sUriMatcher.addURI(StoreContract.CONTENT_AUTHORITY, StoreContract.PATH_STORE + "/#", ITEM_ID);
+        sUriMatcher.addURI(RoomContract.CONTENT_AUTHORITY, RoomContract.PATH_STORE, STORE);
+        sUriMatcher.addURI(RoomContract.CONTENT_AUTHORITY, RoomContract.PATH_STORE + "/#", ITEM_ID);
     }
 
     @Override
     public boolean onCreate() {
-        dbHelper = new StoreDBHelper(getContext());
+        dbHelper = new RoomDBHelper(getContext());
         return true;
     }
 
@@ -36,13 +36,13 @@ public class StoreProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch (match) {
             case STORE:
-                cursor = database.query(StoreContract.StoreEntry.TABLE_NAME, projection, selection, selectionArgs,
+                cursor = database.query(RoomContract.RoomEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             case ITEM_ID:
-                selection = StoreContract.StoreEntry._ID + "=?";
+                selection = RoomContract.RoomEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                cursor = database.query(StoreContract.StoreEntry.TABLE_NAME, projection, selection, selectionArgs,
+                cursor = database.query(RoomContract.RoomEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             default:
@@ -55,23 +55,19 @@ public class StoreProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
-        String name = values.getAsString(StoreContract.StoreEntry.COLUMN_PRODUCT_NAME);
-        if (name == null) {
-            throw new IllegalArgumentException("Please fill in book's name");
+        String roomName = values.getAsString(RoomContract.RoomEntry.COLUMN_ROOM_NAME);
+        if (roomName == null) {
+            throw new IllegalArgumentException("Please fill in the room name");
+        }
+        String arduinoName = values.getAsString(RoomContract.RoomEntry.COLUMN_ARDUINO_NAME);
+        if (arduinoName == null) {
+            throw new IllegalArgumentException("Please fill in the arduino name");
         }
 
-        Integer price = values.getAsInteger(StoreContract.StoreEntry.COLUMN_PRODUCT_PRICE);
-        if (price != null && price < 0) {
-            throw new IllegalArgumentException("Please fill in a valid price");
-        }
-        Integer quantity = values.getAsInteger(StoreContract.StoreEntry.COLUMN_PRODUCT_QUANTITY);
-        if (quantity != null && quantity < 0) {
-            throw new IllegalArgumentException("Please fill in a valid price");
-        }
 
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
-        long id = database.insert(StoreContract.StoreEntry.TABLE_NAME, null, values);
+        long id = database.insert(RoomContract.RoomEntry.TABLE_NAME, null, values);
 
         if (id == -1) {
             Log.e(LOG_TAG, "Failed to insert row for " + uri);
@@ -89,7 +85,7 @@ public class StoreProvider extends ContentProvider {
             case STORE:
                 return updateItem(uri, contentValues, selection, selectionArgs);
             case ITEM_ID:
-                selection = StoreContract.StoreEntry._ID + "=?";
+                selection = RoomContract.RoomEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateItem(uri, contentValues, selection, selectionArgs);
             default:
@@ -99,34 +95,25 @@ public class StoreProvider extends ContentProvider {
 
     private int updateItem(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
-        if (values.containsKey(StoreContract.StoreEntry.COLUMN_PRODUCT_NAME)) {
-            String name = values.getAsString(StoreContract.StoreEntry.COLUMN_PRODUCT_NAME);
-            if (name == null) {
-                throw new IllegalArgumentException("Please fill in book's name");
+        if (values.containsKey(RoomContract.RoomEntry.COLUMN_ROOM_NAME)) {
+            String roomName = values.getAsString(RoomContract.RoomEntry.COLUMN_ROOM_NAME);
+            if (roomName == null) {
+                throw new IllegalArgumentException("Please fill in room name");
             }
         }
 
+        if (values.containsKey(RoomContract.RoomEntry.COLUMN_ARDUINO_NAME)) {
+            String arduinoName = values.getAsString(RoomContract.RoomEntry.COLUMN_ROOM_NAME);
+            if (arduinoName == null) {
+                throw new IllegalArgumentException("Please fill in arduino name");
+            }
+        }
 
-        if (values.containsKey(StoreContract.StoreEntry.COLUMN_PRODUCT_PRICE)) {
-            Integer price = values.getAsInteger(StoreContract.StoreEntry.COLUMN_PRODUCT_PRICE);
-            if (price != null && price < 0) {
-                throw new IllegalArgumentException("Please fill in a valid price");
-            }
-        }
-        if (values.containsKey(StoreContract.StoreEntry.COLUMN_PRODUCT_QUANTITY)) {
-            Integer quantity = values.getAsInteger(StoreContract.StoreEntry.COLUMN_PRODUCT_QUANTITY);
-            if (quantity != null && quantity < 0) {
-                throw new IllegalArgumentException("Please fill in a valid number");
-            }
-        }
-        if (values.size() == 0) {
-            return 0;
-        }
 
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
         // Returns the number of database rows affected by the update statement
-        int rowsUpdated = database.update(StoreContract.StoreEntry.TABLE_NAME, values, selection, selectionArgs);
+        int rowsUpdated = database.update(RoomContract.RoomEntry.TABLE_NAME, values, selection, selectionArgs);
 
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
@@ -143,12 +130,12 @@ public class StoreProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case STORE:
-                rowsDeleted = database.delete(StoreContract.StoreEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(RoomContract.RoomEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case ITEM_ID:
-                selection = StoreContract.StoreEntry._ID + "=?";
+                selection = RoomContract.RoomEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                rowsDeleted= database.delete(StoreContract.StoreEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted= database.delete(RoomContract.RoomEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
@@ -166,9 +153,9 @@ public class StoreProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case STORE:
-                return StoreContract.StoreEntry.CONTENT_LIST_TYPE;
+                return RoomContract.RoomEntry.CONTENT_LIST_TYPE;
             case ITEM_ID:
-                return StoreContract.StoreEntry.CONTENT_ITEM_TYPE;
+                return RoomContract.RoomEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }

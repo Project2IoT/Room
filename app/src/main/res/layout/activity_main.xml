@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/add_book" />
+        android:src="@drawable/plus" />
 
     <!-- Empty view for the list -->
     <RelativeLayout
@@ -26,12 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
 
-        <ImageView
-            android:id="@+id/empty_shelf"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/empty_shelf" />
+
 
         <TextView
             android:id="@+id/empty_title_text"
@@ -52,6 +47,6 @@
             android:paddingTop="8dp"
             android:text="@string/empty_view_subtitle_text"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#A2AAB0" />
+            android:textColor="#ffffff" />
     </RelativeLayout>
 </RelativeLayout>

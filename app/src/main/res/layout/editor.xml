@@ -15,63 +15,12 @@
         android:inputType="textCapWords" />
 
     <EditText
-        android:id="@+id/edit_price"
+        android:id="@+id/edit_arduino"
         style="@style/EditorFieldStyle"
         android:hint="@string/hintPrice"
-        android:inputType="number" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/edit_quantity"
-            style="@style/EditorFieldStyle"
-            android:layout_width="0dp"
-            android:layout_weight="3"
-            android:hint="@string/hintQuantity"
-            android:inputType="number" />
-
-        <Button
-            android:id="@+id/addOne"
-            style="@style/EditorFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:focusable="false"
-            android:text="+1" />
-
-        <Button
-            android:id="@+id/deleteOne"
-            style="@style/EditorFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:focusable="false"
-            android:text="-1" />
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/edit_supplier_name"
-        style="@style/EditorFieldStyle"
-        android:hint="@string/hintSupplierName"
         android:inputType="text" />
-
-    <EditText
-        android:id="@+id/edit_supplier_no"
-        style="@style/EditorFieldStyle"
-        android:hint="@string/hintSupplierNo"
-        android:inputType="number" />
-
-
-    <Button
-        android:id="@+id/contact"
-        style="@style/EditorFieldStyle"
-        android:layout_marginTop="32dp"
-        android:layout_width="match_parent"
+    <Switch
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:autoLink="phone"
-        android:focusable="false"
-        android:text="@string/contact" />
-
+        android:id="@+id/onOffSwitch"/>
 </LinearLayout>
